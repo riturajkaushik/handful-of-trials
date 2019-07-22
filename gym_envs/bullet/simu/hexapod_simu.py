@@ -1,19 +1,20 @@
 #Insert packages path to sys.path
 #So that the codes can be run from any directory
-from pathlib import Path
+# from pathlib import Path
 import os 
 import sys
 this_file_path = os.path.dirname(os.path.realpath(__file__))
-base_path = str(Path(this_file_path).parent)
+# base_path = str(Path(this_file_path).parent)
 import pybullet
 import pybullet_data
 import time 
 import numpy as np
 import math
+base_path = this_file_path
 
 class Hexapod_env:
     "Hexapod environment"
-    def __init__(self, gui, controlStep=0.1, simStep = 0.015, controller=None, jointControlMode = "position", visualizationSpeed = 1.0, boturdf= base_path + "/environments/URDF/pexod.urdf", floorurdf= base_path + "/environments/URDF/plane.urdf", lateral_friction=10.0):
+    def __init__(self, gui, controlStep=0.1, simStep = 0.015, controller=None, jointControlMode = "position", visualizationSpeed = 1.0, boturdf= base_path + "/URDF/pexod.urdf", floorurdf= base_path + "/URDF/plane.urdf", lateral_friction=10.0):
         self.p = pybullet
         self.__vspeed = visualizationSpeed 
         self.__init_state= [0.0, 0.0, 0.0] + [0.0, 0.0, 0.0, 0.0] #position and orientation
