@@ -19,7 +19,7 @@ class HexapodConfigModule:
     NTRAIN_ITERS = 100
     NROLLOUTS_PER_ITER = 1
     PLAN_HOR = 25
-    MODEL_IN, MODEL_OUT = 27, 20
+    MODEL_IN, MODEL_OUT = 36+4, 4
     GP_NINDUCING_POINTS = 200
 
     def __init__(self):
@@ -49,16 +49,14 @@ class HexapodConfigModule:
         return next_obs - obs
 
     def obs_cost_fn(self, obs):
-        # to_w, og_w = 0.5, 1.25
         hexa_pos, goal_pos = obs[:, 0:2], self.ENV.goal
 
         if isinstance(obs, np.ndarray):
-            hexa_goal_dist = np.sum(np.abs(hexa_pos - goal_pos), axis=1)
-            return to_w * tip_obj_dist + og_w * obj_goal_dist
+            hexa_goal_dist = np.pow(hexa_pos - goal_pos,2).sum(axis=1)
+            return hexa_goal_dist
         else:
-            tip_obj_dist = tf.reduce_sum(tf.abs(tip_pos - obj_pos), axis=1)
-            obj_goal_dist = tf.reduce_sum(tf.abs(goal_pos - obj_pos), axis=1)
-            return to_w * tip_obj_dist + og_w * obj_goal_dist
+            hexa_goal_dist = tf.reduce_sum(tf.pow(hexa_pos - goal_pos,2), axis=1)
+            return hexa_goal_dist
 
     @staticmethod
     def ac_cost_fn(acs):
@@ -73,6 +71,7 @@ class HexapodConfigModule:
             sess=self.SESS, load_model=model_init_cfg.get("load_model", False),
             model_dir=model_init_cfg.get("model_dir", None)
         ))
+        print("OK so far")
         if not model_init_cfg.get("load_model", False):
             model.add(FC(200, input_dim=self.MODEL_IN, activation="swish", weight_decay=0.00025))
             model.add(FC(200, activation="swish", weight_decay=0.0005))
@@ -80,7 +79,6 @@ class HexapodConfigModule:
             model.add(FC(self.MODEL_OUT, weight_decay=0.00075))
         model.finalize(tf.train.AdamOptimizer, {"learning_rate": 0.001})
         return model
-
     def gp_constructor(self, model_init_cfg):
         model = get_required_argument(model_init_cfg, "model_class", "Must provide model class")(DotMap(
             name="model",

@@ -23,7 +23,9 @@ class HexapodEnv(gym.Env):
         return np.array([cm[0], cm[1], np.sin(ang), np.cos(ang)])
     
     def step(self, action):
-        self.hexa.run(action, self.sim_time)
+        print (action)
+        self.ctlr.setParams(action)
+        self.hexa.run(self.sim_time)
         self.state = self.__get_state()
         diff = (self.state[0]-self.goal[0])**2 +  (self.state[1]-self.goal[1])**2 
         rew = np.exp(-0.05*diff)
