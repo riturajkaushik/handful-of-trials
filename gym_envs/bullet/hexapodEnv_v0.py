@@ -10,7 +10,7 @@ class HexapodEnv(gym.Env):
         self.action_space = spaces.Box(low= np.zeros(36), high=np.ones(36))
         self.observation_space = spaces.Box(low= np.array([-20,-20, -1, -1]), high=np.array([20,20, 1, 1])) #(x, y, sin_theta, cos_theta)
         self.ctlr = HexaController()
-        self.hexa = Hexapod_env(gui=True)
+        self.hexa = Hexapod_env(gui=True, visualizationSpeed=8.0)
         self.hexa.setController(self.ctlr)
         self.sim_time = 3.0
         self.state = np.array([0, 0, np.sin(0), np.cos(0)])
@@ -23,7 +23,6 @@ class HexapodEnv(gym.Env):
         return np.array([cm[0], cm[1], np.sin(ang), np.cos(ang)])
     
     def step(self, action):
-        print (action)
         self.ctlr.setParams(action)
         self.hexa.run(self.sim_time)
         self.state = self.__get_state()

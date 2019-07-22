@@ -61,9 +61,9 @@ class HexapodConfigModule:
     @staticmethod
     def ac_cost_fn(acs):
         if isinstance(acs, np.ndarray):
-            return 0.1 * np.sum(np.square(acs), axis=1)
+            return 0.1 * np.sum(np.square(acs), axis=1) * 0.0
         else:
-            return 0.1 * tf.reduce_sum(tf.square(acs), axis=1)
+            return 0.1 * tf.reduce_sum(tf.square(acs), axis=1) * 0.0
 
     def nn_constructor(self, model_init_cfg):
         model = get_required_argument(model_init_cfg, "model_class", "Must provide model class")(DotMap(
