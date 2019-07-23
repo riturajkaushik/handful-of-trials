@@ -15,12 +15,12 @@ import gym_envs.bullet
 
 class HexapodConfigModule:
     ENV_NAME = "HexapodEnv-v0"
-    TASK_HORIZON = 150
-    NTRAIN_ITERS = 100
+    TASK_HORIZON = 20
+    NTRAIN_ITERS = 300
     NROLLOUTS_PER_ITER = 1
-    PLAN_HOR = 25
+    PLAN_HOR = 20
     MODEL_IN, MODEL_OUT = 36+4, 4
-    GP_NINDUCING_POINTS = 200
+    GP_NINDUCING_POINTS = 300
 
     def __init__(self):
         self.ENV = gym.make(self.ENV_NAME)
